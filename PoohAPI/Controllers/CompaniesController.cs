@@ -99,12 +99,34 @@ namespace PoohAPI.Controllers
         [ProducesResponseType(404)]
         public IActionResult GetCompanyReviews(int id)
         {
-            IEnumerable<ReviewPublic> reviews = this.reviewReadService.GetListReviewsForCompany(id);
+            IEnumerable<ReviewPublic> reviews = this.reviewReadService.GetListReviewsForCompany(id, true);
 
             if (reviews is null)
                 return NotFound("No reviews found for this company.");
 
             return Ok(reviews);
         }
+
+        /// <summary>
+        /// Retrieves relevant reviews for a company by its id
+        /// </summary>
+        /// <param name="id">The id of a company</param>
+        /// <returns>A list of anonymous reviews</returns>
+        /// <response code="200">Returns the anonymous reviews of the company</response>
+        /// <response code="404">If the specified company was not found</response>   
+        [HttpGet("{id}/relevantreviews")]
+        [ProducesResponseType(typeof(IEnumerable<ReviewPublic>), 200)]
+        [ProducesResponseType(404)]
+        public IActionResult GetCompanyRelevantReviews(int id)
+        {
+            IEnumerable<ReviewPublic> reviews = this.reviewReadService.GetListReviewsForCompany(id, false);
+
+            if (reviews is null)
+                return NotFound("No reviews found for this company.");
+
+            return Ok(reviews);
+        }
+
+
     }
 }

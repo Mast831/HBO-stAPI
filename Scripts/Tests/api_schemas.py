@@ -78,7 +78,8 @@ review_schema = {
                     'verifiedReview' : {'type' : 'integer'},
 					'verifiedBy' : {'type' : 'integer'},
 					'verificationDate' : {'type' : 'string'},
-					'locked' : {'type' : 'boolean'}
+					'locked' : {'type' : 'boolean'},
+                    'relevant' : {'type' : 'boolean'}
                 }
 
 major_schema = {

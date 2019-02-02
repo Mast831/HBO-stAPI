@@ -57,7 +57,7 @@ namespace PoohAPI.Controllers
             {
                 return NotFound("Review not found.");
             }
-            else if (review.UserId == userId)
+            else if (review.UserId == userId && !review.Irrelevant)
             {
                 return Ok(_reviewReadService.GetReviewById(id));
             }

@@ -52,13 +52,13 @@ namespace PoohAPI.Logic.Reviews.Services
             return this._mapper.Map<IEnumerable<int>>(_reviewRepository.GetListReviewIds(query, parameters));
         }
 
-        public IEnumerable<ReviewPublic> GetListReviewsForCompany(int companyId)
+        public IEnumerable<ReviewPublic> GetListReviewsForCompany(int companyId, bool relevant)
         {
             Dictionary<string, object> parameters = new Dictionary<string, object>();
 
             parameters.Add("@id", companyId);
 
-            string query = @"SELECT review_id, review_bedrijf_id, review_sterren, review_geschreven, 
+            string query = @"SELECT review_id, review_bedrijf_id, review_sterren, review_geschreven, review_niet_relevant, 
                 IF(u.user_name IS NULL, 'Anoniem',
                         CASE WHEN r.review_anoniem = 1 
                         THEN u.user_name 
@@ -69,7 +69,7 @@ namespace PoohAPI.Logic.Reviews.Services
                 ELSE NULL END AS review_datum 
             FROM reg_reviews r 
             LEFT JOIN reg_users u ON r.review_student_id = u.user_id 
-            WHERE review_bedrijf_id = @id";
+            WHERE review_bedrijf_id = @id AND review_niet_relevant = false";
 
             var dbReviews = _reviewRepository.GetListReviews(query, parameters);
 
@@ -82,6 +82,11 @@ namespace PoohAPI.Logic.Reviews.Services
             }
 
             return null;
+        }
+
+        public IEnumerable<ReviewPublic> GetListOnlyRelevantReviewsForCompany(int companyId)
+        {
+            return GetListReviewsForCompany(companyId, true);
         }
     }
 }
