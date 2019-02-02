@@ -67,9 +67,17 @@ namespace PoohAPI.Logic.Reviews.Services
                 CASE WHEN r.review_anoniem = 0 
                 THEN r.review_datum 
                 ELSE NULL END AS review_datum 
-            FROM reg_reviews r 
-            LEFT JOIN reg_users u ON r.review_student_id = u.user_id 
-            WHERE review_bedrijf_id = @id AND review_niet_relevant = false";
+            FROM reg_reviews r";
+
+            if (relevant)
+            {
+                query = query +
+                @"WHERE r.review_niet_relevant = false";
+            }
+
+            query = query +
+                @"LEFT JOIN reg_users u ON r.review_student_id = u.user_id
+                WHERE review_bedrijf_id = @id";
 
             var dbReviews = _reviewRepository.GetListReviews(query, parameters);
 
